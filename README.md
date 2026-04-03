@@ -15,3 +15,18 @@
 4. Tải tất cả các driver trình duyệt cần thiết về máy
 
 `playwright install`
+
+# Config
+
+Hiện browser khi chạy test
+- CMD: `set "HEADED=1" && dotnet test`
+- PowerShell: `$env:HEADED=1; dotnet test`
+- Linux/MacOS: `HEADED=1 dotnet test`
+- Hoặc thêm vào file `appsettings.json`:
+```json
+{
+  "PlaywrightSettings": {
+	"Headed": true
+  }
+}
+```
