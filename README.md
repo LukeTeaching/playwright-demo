@@ -30,4 +30,6 @@ Hiện browser khi chạy test
   }
 }
 ```
-
+Cách xem file `trace` 
+- **Dùng CLI:** Gõ lệnh `playwright show-trace trace.zip`.
+- **Dùng Web:** Truy cập [link](trace.playwright.dev) và kéo thả file `trace.zip` vào.
