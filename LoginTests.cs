@@ -1,0 +1,53 @@
+﻿using System.Threading.Tasks;
+using Microsoft.Playwright.NUnit;
+using NUnit.Framework;
+
+namespace PlaywrightTests;
+
+// Kế thừa PageTest: Playwright sẽ TỰ ĐỘNG khởi tạo thuộc tính 'Page' cho mỗi Test
+public class LoginTests : PageTest
+{
+    [Test]
+    public async Task Test_ValidLogin_ShouldSucceed()
+    {
+        // 1. Điều hướng (Awaited)
+        await Page.GotoAsync("https://the-internet.herokuapp.com/login");
+
+        // 2. Tương tác với Auto-wait (Không cần Explicit Wait)
+        // Thay vì FindElement, Playwright dùng Locator với các hàm Async
+        await Page.Locator("#username").FillAsync("tomsmith");
+        await Page.Locator("#password").FillAsync("SuperSecretPassword!");
+        await Page.Locator("button[type='submit']").ClickAsync();
+
+        // 3. Xác minh với Web-First Assertions
+        var flashMessage = Page.Locator("#flash");
+        await Expect(flashMessage).ToContainTextAsync("You logged into a secure area!");
+    }
+
+    [Test]
+    public async Task TestWithTrace()
+    {
+        // 1. Khởi động Tracing trước khi thực hiện các hành động
+        await Context.Tracing.StartAsync(new()
+        {
+            Screenshots = true,
+            Snapshots = true,
+            Sources = true // Ghi lại cả mã nguồn C#
+        });
+
+        await Page.GotoAsync("https://the-internet.herokuapp.com/login");
+        await Page.Locator("#username").FillAsync("tomsmith");
+        await Page.Locator("#password").FillAsync("SuperSecretPassword!");
+        await Page.Locator("button[type='submit']").ClickAsync();
+
+        var flashMessage = Page.Locator("#flash");
+        await Expect(flashMessage).ToContainTextAsync("You logged into a secure area!");
+
+        // 2. Dừng và lưu file Trace (định dạng .zip)
+        await Context.Tracing.StopAsync(new()
+        {
+            Path = "trace.zip"
+        });
+
+    }
+}
