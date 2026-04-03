@@ -23,6 +23,7 @@ public class LoginTests : PageTest
         var flashMessage = Page.Locator("#flash");
         await Expect(flashMessage).ToContainTextAsync("You logged into a secure area!");
     }
+
     [Test]
     public async Task TestWithTrace()
     {
@@ -47,6 +48,21 @@ public class LoginTests : PageTest
         {
             Path = "trace.zip"
         });
+    }
 
+    [Test]
+    public async Task Test_DynamicLoading_ThePlaywrightWay()
+    {
+        await Page.GotoAsync("https://the-internet.herokuapp.com/dynamic_loading/1");
+
+        // Click nút Start
+        await Page.Locator("#start button").ClickAsync();
+
+        // Trong Selenium: Phải viết logic chờ thanh Loading biến mất rồi mới check Text.
+        // Trong Playwright: Không cần làm gì cả! Chỉ cần Expect trực tiếp cái kết quả.
+        // Nó sẽ tự động "hỏi thăm" vòng lặp liên tục cho đến khi thẻ #finish xuất hiện.
+
+        var finishText = Page.Locator("#finish");
+        await Expect(finishText).ToHaveTextAsync("Hello World!");
     }
 }
