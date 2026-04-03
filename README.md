@@ -30,3 +30,5 @@ Hiện browser khi chạy test
   }
 }
 ```
+
+Enable codegen: `playwright codegen https://the-internet.herokuapp.com/login`
